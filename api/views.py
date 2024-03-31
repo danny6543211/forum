@@ -1,16 +1,14 @@
 from django.contrib.auth import authenticate
-from rest_framework import generics, status, permissions, viewsets, mixins
+from rest_framework import status, viewsets, mixins
 from rest_framework.authtoken.models import Token
-from rest_framework.decorators import api_view, action
+from rest_framework.decorators import action
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from .models import User, UserProfile, Article
-from .permissions import IsOwnerOrReadOnly, ArticlePermission
-from .serializers import UserProfileSerializer, ArticleSerializer
+from .models import Article, User, UserProfile 
+from .permissions import ArticlePermission, IsOwnerOrReadOnly 
+from .serializers import ArticleSerializer, UserProfileSerializer
 
 
 class UserViewSet(viewsets.GenericViewSet):
-
     @action(detail=False, methods=['POST'])
     def login(self, request):
         username = request.data['username']
@@ -50,11 +48,13 @@ class UserViewSet(viewsets.GenericViewSet):
             return Response({'msg': 'User created successfully.'}, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        
 
 class UserProfileViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.UpdateModelMixin, mixins.RetrieveModelMixin):
     queryset = UserProfile.objects.all()
     serializer_class = UserProfileSerializer
     permission_classes = [IsOwnerOrReadOnly]
+
 
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
