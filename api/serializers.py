@@ -1,7 +1,12 @@
 from rest_framework import serializers
 from . import models
 
-class UserProfileSerializer(serializers.ModelSerializer):
+class ProfileListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = models.UserProfile
-        fields = '__all__'
+        model = models.Profile
+        exclude = ['id']
+
+class ProfileUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Profile
+        exclude = ['id', 'user', 'nickname']

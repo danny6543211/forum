@@ -4,9 +4,16 @@ from . import views
 
 
 router = routers.DefaultRouter()
-router.register(r'user', views.UserProfileViewSet, basename='user')
+
 
 urlpatterns = [
+    path('user/login/', views.user_login),
+    path('user/register/', views.user_register),
+    
+    path('profile/', views.ProfileList.as_view()),
+    path('profile/<int:pk>/', views.ProfileUpdate.as_view()),
+    
+
     path('', include(router.urls)), 
     path('api-auth/', include('rest_framework.urls', namespace='rest_framework')),
 ]
