@@ -7,3 +7,4 @@ class ProfilePermission(BasePermission):
             return True
 
         return obj.user == request.user
+
