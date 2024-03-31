@@ -10,8 +10,8 @@ urlpatterns = [
     path('user/login/', views.user_login),
     path('user/register/', views.user_register),
     
-    path('profile/', views.ProfileList.as_view()),
-    path('profile/<int:pk>/', views.ProfileUpdate.as_view()),
+    path('profile/', views.UserProfileList.as_view()),
+    path('profile/<int:pk>/', views.UserProfileDetail.as_view()),
     
 
     path('', include(router.urls)), 

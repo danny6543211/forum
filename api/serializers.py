@@ -10,15 +10,15 @@ class UserProfileSimpleSerializer(serializers.ModelSerializer):
 class UserProfileDetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.UserProfile
-        fields = '__all__'
+        exclude = ['user']
 
 
-class ArticleSimpleSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Article
-        fields = '__all__'
+# class ArticleSimpleSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.Article
+#         fields = '__all__'
 
-class ArticleDetialSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = models.Article
-        fields = '__all__'
+# class ArticleDetialSerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = models.Article
+#         fields = '__all__'
