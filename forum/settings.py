@@ -20,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-m3vw8*f-8$dh^g^@*9c+y*myxop735#yapl$br4veni&7m)m+y'
+SECRET_KEY = 'django-insecure-#4^^)v&c=me(kf2r$_pay0_*z)o3*rb6e0lkr+)h$cljk9&vdl'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -126,11 +126,9 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
         'rest_framework.authentication.TokenAuthentication',
-    ],
-    'DEFAULT_PERMISSION_CLASSES ': [
-        'rest_framework.permissions.IsAuthenticated',
     ],
 }

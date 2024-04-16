@@ -1,13 +1,13 @@
 from django.contrib.auth import authenticate
-from rest_framework import status, viewsets, mixins
+from rest_framework import mixins, status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
 from rest_framework.response import Response
-from .models import Article, User, UserProfile 
-from .permissions import ArticlePermission, IsOwnerOrReadOnly 
-from .serializers import ArticleSerializer, UserProfileSerializer
+from .models import Article, Comment, User, UserProfile
+from .serializers import UserProfileSerializer, ArticleSerializer, CommentSerializer
+from .permissions import IsOwnerOrReadOnly
 
-
+# Create your views here.
 class UserViewSet(viewsets.GenericViewSet):
     @action(detail=False, methods=['POST'])
     def login(self, request):
@@ -27,7 +27,8 @@ class UserViewSet(viewsets.GenericViewSet):
                             status=status.HTTP_200_OK)
         else:
             return Response({'msg': 'Invalid credentials.'}, status=status.HTTP_401_UNAUTHORIZED)
-
+        
+    
     @action(detail=False, methods=['POST'])    
     def register(self, request):
         username = request.data['username']
@@ -59,16 +60,30 @@ class UserProfileViewSet(viewsets.GenericViewSet, mixins.ListModelMixin, mixins.
 class ArticleViewSet(viewsets.ModelViewSet):
     queryset = Article.objects.all()
     serializer_class = ArticleSerializer
-    permission_classes = [ArticlePermission]
+    permission_classes = [IsOwnerOrReadOnly]
 
     def create(self, request, *args, **kwargs):
-        data = request.data.copy()
-        data['author'] = request.user.id
-        serializer = ArticleSerializer(data=data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        # 判断是否篡改 id
+        if request.user.id != int(request.data['user']):
+            return Response({'msg': 'User id incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+        return super().create(request, *args, **kwargs)
+
+    @action(detail=False, methods=['POST']) 
+    def comments(self, request):
+        queryset = Comment.objects.all().filter(article=request.data['article'])
+        serializer = CommentSerializer(queryset, many=True)
+        return Response(serializer.data)
+
+
+class CommentViewSet(viewsets.GenericViewSet, mixins.CreateModelMixin, mixins.DestroyModelMixin):
+    queryset = Comment.objects.all()
+    serializer_class = CommentSerializer
+    permission_classes = [IsOwnerOrReadOnly]
+
+    def create(self, request, *args, **kwargs):
+        # 判断是否篡改 id
+        if request.user.id != int(request.data['user']):
+            return Response({'msg': 'User id incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+        return super().create(request, *args, **kwargs)
     
-    # reload update......
+
