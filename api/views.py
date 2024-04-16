@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate
-from rest_framework import mixins, status, viewsets
+from rest_framework import mixins, permissions, status, viewsets
 from rest_framework.authtoken.models import Token
 from rest_framework.decorators import action
 from rest_framework.response import Response
@@ -68,7 +68,7 @@ class ArticleViewSet(viewsets.ModelViewSet):
             return Response({'msg': 'User id incorrect'}, status=status.HTTP_400_BAD_REQUEST)
         return super().create(request, *args, **kwargs)
 
-    @action(detail=False, methods=['POST']) 
+    @action(detail=False, methods=['POST'], permission_classes=[permissions.AllowAny]) 
     def comments(self, request):
         queryset = Comment.objects.all().filter(article=request.data['article'])
         serializer = CommentSerializer(queryset, many=True)
